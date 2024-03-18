@@ -1,32 +1,42 @@
 def main():
-    path = "books/frankenstein.txt"
-    book = readText(path)
-    number = countWords(book)
-    chars_dict = get_chars_dict(book)
-    print(chars_dict)
+    book_path = "books/frankenstein.txt"
+    text = get_book_text(book_path)
+    number = text_character_number(text)
+    counts = count_each_letter(text)
+    sorted_counts = counts_to_sorted(counts)
+    print(f"--- Begin report of {book_path} ---")
+    print(f"{number} words found in the document")
 
+    for i in sorted_counts:
+        if not i["char"].isalpha():
+            continue
+        print(f"The item {i['char']} character was found {i['num']} times")
+    
+    print("--- End report ---")
 
- 
-def get_chars_dict(book):
-    res = { }
-    for c in book:
-        lower = c.lower()
-        if lower in res:
-            res[lower] += 1
-        else:
-            res[lower] = 1
+def counts_to_sorted(counts):
+    res = []
+    for o in counts:
+        res.append({"char":o,"num":counts[o]})
+    res.sort(reverse=True, key=lambda x: x["num"])
     return res
 
+def count_each_letter(text):
+    res = {}
+    for c in text:
+        c_lowered= c.lower()
+        if c_lowered in res:
+            res[c_lowered] += 1
+        else:
+            res[c_lowered] = 1
+    return res
 
+def text_character_number(text):
+    splited = text.split()
+    return len(splited)
 
-def countWords(text):
-    words = text.split()
-    return len(words)
-
-def readText(path):
+def get_book_text(path):
     with open(path) as f:
-        file_contents = f.read()
-        return file_contents
-
+        return f.read()
 
 main()
